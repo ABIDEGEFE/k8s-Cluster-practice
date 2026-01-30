@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dep
+  namespace: ns-test   # Recommended: keeps it in your practice namespace
+  labels:
+    section: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      section: frontend
+  # 'template' must be aligned with 'selector'
+  template:
+    metadata:
+      labels:
+        section: frontend
+    spec:
+      containers:
+      - name: frontend-application
+        image: nginx
+        ports:
+        - containerPort: 80
