@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: ns-test
+spec:
+  type: ClusterIP
+  selector:
+    app: voteapp
+    tier: frontend
+  ports:
+  - port: 80
+    targetPort: 80

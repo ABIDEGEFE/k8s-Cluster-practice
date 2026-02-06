@@ -1,0 +1,10 @@
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: voteapp-config
+data:
+  DB_NAME: "votedb"
+  DB_USER: "postgres"
+  DB_HOST: "db-service" # This must match the database service name below
+  ALLOWED_HOSTS: "example.com,backend-service"

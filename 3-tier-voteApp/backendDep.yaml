@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-dep
+  namespace: ns-test
+  labels:
+    app: voteapp
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voteapp
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: voteapp
+        tier: backend
+    spec:
+      containers:
+      - name: django-app
+        image: abinetdegefa/voteapp-backend:v1
+        ports:
+        - containerPort: 8000
+        # Injecting Configuration and Secrets as Environment Variables
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: voteapp-config
+              key: DB_HOST
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: voteapp-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: voteapp-config
+              key: DB_USER
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: voteapp-config
+              key: ALLOWED_HOSTS
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: voteapp-secrets
+              key: db-password
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: voteapp-secrets
+              key: django-secret-key

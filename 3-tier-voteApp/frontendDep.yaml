@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dep
+  namespace: ns-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voteapp
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: voteapp
+        tier: frontend
+    spec:
+      containers:
+      - name: react-app
+        image: abinetdegefa/voteapp-frontend:v1
+        ports:
+        - containerPort: 80 # React is usually served on 80 inside the container

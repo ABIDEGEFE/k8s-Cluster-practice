@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: ns-test
+spec:
+  serviceName: "db-service"
+  replicas: 1
+  # ✅ The selector belongs here, NOT inside the pod spec
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      # ✅ You MUST define labels here so the selector can find the pods
+      labels:
+        app: postgres
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: "bc-node-2"
+      containers:
+      - name: postgres
+        image: postgres:15
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/postgresql/data
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: voteapp-secrets
+              key: db-password
+        # Add the DB_NAME creation variable here too!
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: voteapp-config
+              key: DB_NAME
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
