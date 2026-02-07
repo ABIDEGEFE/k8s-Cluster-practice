@@ -1,4 +1,4 @@
-const API_BASE = 'http://example.com/api'
+const API_BASE = '/api' 
 const CANDIDATE_PATH = '/candidate'
 
 export async function createCandidate({ leaderName, partyName }) {

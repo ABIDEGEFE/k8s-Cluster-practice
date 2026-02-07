@@ -16,8 +16,8 @@ spec:
       labels:
         app: postgres
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: "bc-node-2"
+      # nodeSelector:
+      #   kubernetes.io/hostname: "bc-node-2"
       containers:
       - name: postgres
         image: postgres:15
