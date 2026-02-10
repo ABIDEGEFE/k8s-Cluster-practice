@@ -21,3 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app.urls')),
 ]
+
+
+ # path('api/', include('app.urls')),
+ #  path('candidate', views.storeCandidate, name='storeCandidate'),
+ # const API_BASE = '/api' 
+ # const CANDIDATE_PATH = '/candidate'
