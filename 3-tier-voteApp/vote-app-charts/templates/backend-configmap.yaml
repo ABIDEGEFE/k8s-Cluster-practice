@@ -1,0 +1,11 @@
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-config
+data:
+  DB_NAME: {{ .Values.db.name }}
+  DB_USER: {{ .Values.db.user }}
+  DB_SERVICE: {{ include "vote-app-chart.fullname" . }}-db-svc # This must match the database service name below
+  ALLOWED_HOSTS: {{ .Values.db.host }}
+

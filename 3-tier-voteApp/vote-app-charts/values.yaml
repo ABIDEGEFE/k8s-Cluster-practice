@@ -1,0 +1,16 @@
+backendReplicaCount: 3
+image:
+  repository: abinetdegefa/voteapp-backend
+  tag: v3
+  pullPolicy: IfNotPresent
+global:
+  env: staging
+service:
+  type: ClusterIP
+  port: 80
+namespace:
+  name: ns-test
+db:
+  name: votedb
+  host: example.com
+  user: postgres

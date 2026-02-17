@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-backend
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: {{ include "vote-app-chart.fullname" . }}
+    tier: backend
+spec:
+  replicas: {{ .Values.backendReplicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "vote-app-chart.fullname" . }}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ include "vote-app-chart.fullname" . }}
+        tier: backend
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:15 # Use the same version as your DB
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h db-service -p 5432; do
+                echo "Waiting for database to be reachable..."
+                sleep 2
+              done
+        - name: run-migrations
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }} # Use your actual backend image
+          command:
+            - sh
+            - -c
+            - "python manage.py migrate"
+          envFrom:
+            - configMapRef:
+                name: voteapp-config # Ensure this matches your ConfigMap name
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: voteapp-secrets
+                  key: db-password
+      containers:
+      - name: django-app
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        # Injecting Configuration and Secrets as Environment Variables
+        env:
+        - name: DB_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-config
+              key: DB_SERVICE
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-config
+              key: DB_USER
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-config
+              key: ALLOWED_HOSTS
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: voteapp-secrets
+              key: db-password
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: voteapp-secrets
+              key: django-secret-key
+        - name: APP_ENV
+          value: {{ .Values.global.env }}
