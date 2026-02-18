@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-frontend-service
+  namespace: {{ .Values.namespace.name }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ include "vote-app-chart.fullname" . }}
+    tier: frontend
+  ports:
+  - port: {{ .Values.frontendService.port }}
+    targetPort: 80
+

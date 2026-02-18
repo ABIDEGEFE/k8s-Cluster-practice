@@ -6,6 +6,6 @@ metadata:
 data:
   DB_NAME: {{ .Values.db.name }}
   DB_USER: {{ .Values.db.user }}
-  DB_SERVICE: {{ include "vote-app-chart.fullname" . }}-db-svc # This must match the database service name below
+  DB_SERVICE: {{ include "vote-app-chart.fullname" . }}-db-service # This must match the database service name below
   ALLOWED_HOSTS: {{ .Values.db.host }}
 

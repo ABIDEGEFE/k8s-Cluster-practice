@@ -1,0 +1,27 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-ingress
+  #annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: / # Critical for path routing
+spec:
+  ingressClassName: {{ .Values.ingressClass.name }}
+  rules:
+  - host: {{ .Values.ingressClass.host }}
+    http:
+      paths:
+      - path: {{ .Values.backendPath }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "vote-app-chart.fullname" . }}-backend-svc
+            port:
+              number: {{ .Values.service.port }}
+      - path: {{ .Values.frontendPath }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "vote-app-chart.fullname" . }}-frontend-service
+            port:
+              number: {{ .Values.frontendService.port }}

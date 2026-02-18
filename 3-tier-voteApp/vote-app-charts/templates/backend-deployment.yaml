@@ -37,12 +37,12 @@ spec:
             - "python manage.py migrate"
           envFrom:
             - configMapRef:
-                name: voteapp-config # Ensure this matches your ConfigMap name
+                name: {{ include "vote-app-chart.fullname" . }}-config # Ensure this matches your ConfigMap name
           env:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: voteapp-secrets
+                  name: {{ include "vote-app-chart.fullname" . }}-db-secret
                   key: db-password
       containers:
       - name: django-app
@@ -75,12 +75,12 @@ spec:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: voteapp-secrets
+              name: {{ include "vote-app-chart.fullname" . }}-db-secret
               key: db-password
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: voteapp-secrets
+              name: {{ include "vote-app-chart.fullname" . }}-db-secret
               key: django-secret-key
         - name: APP_ENV
           value: {{ .Values.global.env }}

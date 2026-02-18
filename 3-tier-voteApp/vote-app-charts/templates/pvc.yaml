@@ -1,0 +1,13 @@
+# pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-pvc
+  namespace: {{ .Values.namespace.name }}
+spec:
+  storageClassName: {{ .Values.persistentVolume.storageClassName }}
+  accessModes:
+    - {{ .Values.persistentVolume.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolume.capacity }}

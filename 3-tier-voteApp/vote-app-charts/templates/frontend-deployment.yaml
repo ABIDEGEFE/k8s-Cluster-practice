@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vote-app-chart.fullname" . }}-frontend
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.frontendReplicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "vote-app-chart.fullname" . }}
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: {{ include "vote-app-chart.fullname" . }}
+        tier: frontend
+    spec:
+      containers:
+      - name: react-app
+        image: {{ .Values.frontendImage.name }}
+        ports:
+        - containerPort: 80 # React is usually served on 80 inside the container

@@ -7,10 +7,35 @@ global:
   env: staging
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
 namespace:
   name: ns-test
 db:
   name: votedb
   host: example.com
   user: postgres
+  password: ""
+statefulSet:
+  name: db
+dbReplicaCount: 1
+postgresImage:
+  repository: postgres:15
+volume:
+  mountPath: "/var/lib/postgresql/data"
+frontendReplicaCount: 1
+frontendImage:
+  name: abinetdegefa/voteapp-frontend:v2
+ingressClass:
+  name: nginx
+  host: example.com
+backendPath: /api
+frontendPath: /
+frontendService:
+  port: 80
+persistentVolume:
+  capacity: 1Gi
+  accessMode: ReadWriteOnce
+  storageClassName: standard
+  hostpath:
+    path: "/mnt/data/postgres"
+

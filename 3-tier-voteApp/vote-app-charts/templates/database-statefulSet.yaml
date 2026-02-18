@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulSet.name }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  serviceName: {{ include "vote-app-chart.fullname" . }}-db-service
+  replicas: {{ .Values.dbReplicaCount }}
+  # ✅ The selector belongs here, NOT inside the pod spec
+  selector:
+    matchLabels:
+      app: {{ include "vote-app-chart.fullname" . }}-postgres
+  template:
+    metadata:
+      # ✅ You MUST define labels here so the selector can find the pods
+      labels:
+        app: {{ include "vote-app-chart.fullname" . }}-postgres
+    spec:
+      # nodeSelector:
+      #   kubernetes.io/hostname: "bc-node-2"
+      containers:
+      - name: postgres
+        image: {{ .Values.postgresImage.repository }}
+        volumeMounts:
+        - name: {{ include "vote-app-chart.fullname" . }}-db-storage
+          mountPath: {{ .Values.volume.mountPath }}
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-db-secret
+              key: db-password
+        # Add the DB_NAME creation variable here too!
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "vote-app-chart.fullname" . }}-config
+              key: DB_NAME
+      volumes:
+      - name: {{ include "vote-app-chart.fullname" . }}-db-storage
+        persistentVolumeClaim:
+          claimName: {{ include "vote-app-chart.fullname" . }}-pvc
+
