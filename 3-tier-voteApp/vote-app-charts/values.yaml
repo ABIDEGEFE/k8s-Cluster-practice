@@ -1,7 +1,7 @@
-backendReplicaCount: 3
+backendReplicaCount: 2
 image:
   repository: abinetdegefa/voteapp-backend
-  tag: v3
+  tag: v2
   pullPolicy: IfNotPresent
 global:
   env: staging
@@ -38,4 +38,4 @@ persistentVolume:
   storageClassName: standard
   hostpath:
     path: "/mnt/data/postgres"
-
+SECRET_KEY: django-insecure-_5x9q8q-j5g1l(!49r=9uu=b=yf7m0md1ze2x&intpqhy-tg2@
