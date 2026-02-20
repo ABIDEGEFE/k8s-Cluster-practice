@@ -1,11 +1,5 @@
 # Kubernetes Service Discovery & Traffic Management
 
-
-------------------
-
-<img width="1920" height="1080" alt="Your paragraph text (1)" src="https://github.com/user-attachments/assets/b7b66dff-c31e-481b-9347-c5681bcceeef" />
-
-
 This repository demonstrates a step-by-step implementation of a professional traffic flow within a Kubernetes cluster using **Deployments**, **Services**, and **Ingress Controllers**.
 
 > **Environment Note:** The cluster is bootstrapped using `kubeadm` on a private cloud provider consisting of **one Control Plane** and **three Worker Nodes**.
