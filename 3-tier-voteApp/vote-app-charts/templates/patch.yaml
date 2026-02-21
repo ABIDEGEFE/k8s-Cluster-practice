@@ -1,0 +1,4 @@
+kubelet:
+  serviceMonitor:
+    https: true
+    insecureSkipVerify: true
