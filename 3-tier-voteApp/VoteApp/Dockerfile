@@ -5,20 +5,20 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install build dependencies needed for some Python packages (psycopg2)
+# Install system deps
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc libpq-dev build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
+# Copy and install Python deps
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Install runtime Python dependencies (locked to Django 4.x as project indicates)
-RUN pip install Django==4.2.12 djangorestframework django-cors-headers psycopg2-binary gunicorn
+# Copy project files
+COPY . .
 
-# Copy project
-COPY . /app
-
-# Create a directory for collected static files (optional mount)
+# Create static dir (optional)
 RUN mkdir -p /vol/static
 
 EXPOSE 8000

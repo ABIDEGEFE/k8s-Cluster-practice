@@ -11,16 +11,17 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ABCD' # In production, use a secure method to set this, such as an environment variable or a secrets manager
+SECRET_KEY = os.environ.get('SECRET_VALUE') # In production, use a secure method to set this, such as an environment variable or a secrets manager
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -30,6 +31,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 CORS_ALLOWED_ORIGINS = [
     'http://example.com',
     'https://example.com',
+    #'http://localhost:5173'
+    #'http://localhost:8000'
 ]
 
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://example.com").split(",")
@@ -37,12 +40,14 @@ CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://example.co
 CSRF_TRUSTED_ORIGINS = [
     'http://example.com',
     'https://example.com',
+ 
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django_prometheus',
     'app',
     'corsheaders',
     'django.contrib.admin',
@@ -55,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'VoteApp.urls'
@@ -94,8 +101,8 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_SERVICE'), # This will be your db-service name
-        'PORT': '5432',
+        'HOST': os.environ.get('DB_SERVICE'),
+        'PORT': '5432'
     }
 }
 
