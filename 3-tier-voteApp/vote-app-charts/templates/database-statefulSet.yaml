@@ -16,8 +16,8 @@ spec:
       labels:
         app: {{ include "vote-app-chart.fullname" . }}-postgres
     spec:
-      # nodeSelector:
-      #   kubernetes.io/hostname: "bc-node-2"
+      securityContext: 
+        fsGroup: 999
       containers:
       - name: postgres
         image: {{ .Values.postgresImage.repository }}

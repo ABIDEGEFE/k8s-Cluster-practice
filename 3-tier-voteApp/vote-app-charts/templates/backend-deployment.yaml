@@ -25,7 +25,7 @@ spec:
             - sh
             - -c
             - |
-              until pg_isready -h db-service -p 5432; do
+              until pg_isready -h {{ include "vote-app-chart.fullname" . }}-db-service -p 5432; do
                 echo "Waiting for database to be reachable..."
                 sleep 2
               done
@@ -77,7 +77,7 @@ spec:
             secretKeyRef:
               name: {{ include "vote-app-chart.fullname" . }}-db-secret
               key: db-password
-        - name: SECRET_KEY
+        - name: SECRET_VALUE
           valueFrom:
             secretKeyRef:
               name: {{ include "vote-app-chart.fullname" . }}-db-secret
