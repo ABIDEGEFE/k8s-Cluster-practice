@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: django-metrics
+  namespace: ns-test
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "vote-app-chart.fullname" . }}
+  namespaceSelector:
+    matchNames:
+      - ns-test
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
