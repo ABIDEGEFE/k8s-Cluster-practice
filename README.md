@@ -10,6 +10,10 @@ This repository demonstrates a step-by-step implementation of a professional tra
 
 Traffic enters the cluster through a single entry point (Ingress) and is routed to the appropriate microservice based on the URL path.
 
+
+![ingress](https://github.com/user-attachments/assets/29fcadfe-1942-4e8a-877c-33ab6af4a023)
+
+
 ### Step 1: Deploying the Application Layer
 
 We utilize **Deployments** to manage the lifecycle of our pods. The Deployment ensures that the desired state of our application is maintained across the worker nodes.
