@@ -154,9 +154,67 @@ A Secret is a cluster object used to store sensitive information. Instead of har
 use the following docker commands to pull and use already built images.<br>
 
 ```bash
-docker pull abinetdegefa/voteapp-backend:v2
+docker pull abinetdegefa/django-metrix:v4
 
 docker pull abinetdegefa/voteapp-frontend:v2
 ```
+
+
+## Monitoring tool with Promethues and Grapahna
+
+After instrumenting an application, a ServiceMonitor is required to register the service as a target for Prometheus. Operating within the Prometheus Operator framework, the ServiceMonitor uses label selectors to dynamically discover and scrape metrics from the intended service
+
+backend-service.yaml
+```yaml
+  labels:
+    app: vote-app-vote-app-chart
+````
+
+<img width="1637" height="820" alt="Monitoring_pods" src="https://github.com/user-attachments/assets/1d1a5dca-1c40-4888-96d2-2004caaa8d0c" /> 
+
+-----
+
+<img width="1490" height="465" alt="promethes_pf" src="https://github.com/user-attachments/assets/f53bf0a7-9a22-48d5-9665-4872025614cf" />
+
+------
+
+django-metrics.yaml
+```yaml
+spec:
+  selector:
+    matchLabels:
+      app: vote-app-vote-app-chart
+````
+
+For a ServiceMonitor to be recognized by the Prometheus Operator, it must often carry a specific label—commonly release: prometheus—to match the serviceMonitorSelector defined in the Prometheus Custom Resource 
+
+```yaml
+metadata:
+  name: django-metrics
+  namespace: monitoring
+  labels:
+    release: prometheus
+````
+Prometheus maintains visibility by continuously sending scrape requests to target services via their metrics endpoints. Once retrieved, this data is persisted in the Prometheus Time Series Database (TSDB), which is optimized for high-ingest rates and time-based indexing. 
+
+<img width="1853" height="960" alt="prm_dash" src="https://github.com/user-attachments/assets/50b5a2cc-cd2c-4e18-91d5-fb7ee3a3cb05" /> 
+
+-----
+
+
+
+To transform this raw data into actionable insights, Grafana is utilized as the visualization layer. It connects to Prometheus as a data source and executes PromQL (Prometheus Query Language) to retrieve specific metrics, allowing users to build dynamic dashboards and perform complex trend analysis. 
+
+<img width="1608" height="391" alt="graphana_pf" src="https://github.com/user-attachments/assets/9d72a43c-a793-4ab4-bc06-97fede1eda74" /> 
+
+-----
+
+
+<img width="1843" height="998" alt="grap_dash" src="https://github.com/user-attachments/assets/e0a5e4d9-08d5-4e0b-a1dd-2b451aa59632" /> 
+
+------
+
+<img width="1850" height="992" alt="grap_dash2" src="https://github.com/user-attachments/assets/f1baa72d-d295-402a-b47c-1a814d858ad4" />
+
 
 
